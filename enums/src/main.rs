@@ -1,24 +1,33 @@
-use std::sync::{Arc, Mutex};
-use std::thread;
+#[derive(Debug)]
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+impl Message {
+    fn consume(&self) {
+        match self {
+            Message::Quit => println!("Quitting"),
+            Message::Move { x, y } => println!("Moving to {x} {y}"),
+            Message::Write(message) => println!("{message}"),
+            Message::ChangeColor(r, g, b) => println!("Changing color to ({r}, {g}, {b})"),
+        }
+    }
+}
 
 fn main() {
-    let data = Arc::new(Mutex::new(0));
+    let mut message = Message::Write(String::from("Hello!"));
+    message.consume();
+    message = Message::Move { x: 5, y: 5 };
+    message.consume();
+    message = Message::ChangeColor(255, 255, 255);
+    message.consume();
+    message = Message::Quit;
+    message.consume();
 
-    let data_clone1 = data.clone();
-    let t1 = thread::spawn(move || {
-        let mut data = data_clone1.lock().unwrap();
-        *data += 1;
-    });
-
-    let data_clone2 = data.clone();
-    let t2 = thread::spawn(move || {
-        let mut data = data_clone2.lock().unwrap();
-        *data += 1;
-    });
-
-    t1.join().unwrap();
-    t2.join().unwrap();
-
-    let data = data.lock().unwrap();
-    println!("Data: {}", *data);
+    let sure_val: i8 = 1;
+    let opt_val: Option<i8> = Some(1);
+    println!("{}", sure_val + opt_val.expect("`opt_val` is undefined"));
 }
