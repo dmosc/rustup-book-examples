@@ -21,11 +21,12 @@ pub mod args_parser {
 
     pub fn query_and_file_path(args: &Vec<String>) -> Result<Config, &'static str> {
         if args.len() < 3 {
-            return Err("not enough arguments");
+            Err("not enough arguments")
+        } else {
+            let query = args.get(1).unwrap().to_string();
+            let file_path = args.get(2).unwrap().to_string();
+            Ok(Config::new(query, file_path))
         }
-        let query = args.get(1).unwrap().to_string();
-        let file_path = args.get(2).unwrap().to_string();
-        Ok(Config::new(query, file_path))
     }
 }
 
