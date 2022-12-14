@@ -1,6 +1,10 @@
 use std::{env, error::Error, fs, process};
 
-use minigrep::{args::Args, args_parser, search_engine::search};
+use minigrep::{
+    args::Args,
+    args_parser,
+    search_engine::{search, search_lowercase_insensitive},
+};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -17,7 +21,12 @@ fn main() {
 
 fn run(args: Args) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(args.file_path())?;
-    for line in search(args.query(), &contents.to_string()) {
+    let results = if *args.ignore_case() {
+        search_lowercase_insensitive(args.query(), &contents)
+    } else {
+        search(args.query(), &contents)
+    };
+    for line in results {
         println!("{line}");
     }
     Ok(())
