@@ -9,12 +9,12 @@ use minigrep::{
 fn main() {
     let args: Vec<String> = env::args().collect();
     let args = args_parser::query_and_file_path(&args).unwrap_or_else(|error| {
-        println!("Problem passing arguments: {error}");
+        eprintln!("Problem passing arguments: {error}");
         process::exit(1);
     });
     println!("Searching for `{}` in `{}`", args.query(), args.file_path());
     if let Err(error) = run(args) {
-        println!("Application error: {error}");
+        eprintln!("Application error: {error}");
         process::exit(1);
     }
 }
