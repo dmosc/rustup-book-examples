@@ -1,12 +1,12 @@
-use crate::config::Config;
+use crate::args::Args;
 
-pub fn query_and_file_path(args: &Vec<String>) -> Result<Config, &'static str> {
+pub fn query_and_file_path(args: &Vec<String>) -> Result<Args, &'static str> {
     if args.len() < 3 {
         Err("not enough arguments")
     } else {
         let query = args.get(1).unwrap().to_string();
         let file_path = args.get(2).unwrap().to_string();
-        Ok(Config::new(query, file_path))
+        Ok(Args::new(query, file_path))
     }
 }
 
@@ -24,7 +24,7 @@ mod tests {
         let parsed_args = query_and_file_path(&args).unwrap();
         assert_eq!(
             parsed_args,
-            Config::new(String::from("query"), String::from("file_path"))
+            Args::new(String::from("query"), String::from("file_path"))
         );
     }
 

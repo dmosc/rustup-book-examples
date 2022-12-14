@@ -1,27 +1,23 @@
 use std::{env, error::Error, fs, process};
 
-use minigrep::{args_parser, config::Config, search_engine::search};
+use minigrep::{args::Args, args_parser, search_engine::search};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let config = args_parser::query_and_file_path(&args).unwrap_or_else(|error| {
+    let args = args_parser::query_and_file_path(&args).unwrap_or_else(|error| {
         println!("Problem passing arguments: {error}");
         process::exit(1);
     });
-    println!(
-        "Searching for `{}` in `{}`",
-        config.query(),
-        config.file_path()
-    );
-    if let Err(error) = run(config) {
+    println!("Searching for `{}` in `{}`", args.query(), args.file_path());
+    if let Err(error) = run(args) {
         println!("Application error: {error}");
         process::exit(1);
     }
 }
 
-fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    let contents = fs::read_to_string(config.file_path())?;
-    for line in search(config.query(), &contents.to_string()) {
+fn run(args: Args) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(args.file_path())?;
+    for line in search(args.query(), &contents.to_string()) {
         println!("{line}");
     }
     Ok(())
