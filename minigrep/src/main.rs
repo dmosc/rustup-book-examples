@@ -7,8 +7,7 @@ use minigrep::{
 };
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let args = args_parser::query_and_file_path(&args).unwrap_or_else(|error| {
+    let args = args_parser::query_and_file_path(env::args()).unwrap_or_else(|error| {
         eprintln!("Problem passing arguments: {error}");
         process::exit(1);
     });
